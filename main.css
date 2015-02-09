@@ -22,6 +22,18 @@ body {
     background-size: 100% auto;
 }
 
-.square.grass {
-    background-image: url('lib/img/terrain/grass.png');
+.square.bg {
+    background-image: url('lib/img/castleCenter.png');
+}
+
+.square.isKey {
+    background-image: url('lib/img/keyYellow.png');
+}
+
+.square.isLock {
+    background-image: url('lib/img/lock_yellow.png');
+}
+
+.square.isObstacle {
+    background-image: url('lib/img/dirtCaveRockLarge.png');
 }

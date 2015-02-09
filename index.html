@@ -14,7 +14,9 @@
       <% _.each(squares, function (row) { %>
         <div class="row">
           <% _.each(row, function (square) { %>
-            <div class="square <%= square.name %>"></div>
+            <div class="square bg">
+              <div class="square <%= square.name %>"></div>
+            </div>
           <% }); %>
         </div>
       <% }); %>
@@ -24,6 +26,7 @@
       window.exports = {};
     </script>
 
+    <script src="app/utils.js"></script>
     <script src="app/models/player.js"></script>
     <script src="app/models/map.js"></script>
     <script src="app/views/player.js"></script>
