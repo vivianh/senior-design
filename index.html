@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="main.css">
+  </head>
+  <body>
+    <script src="lib/js/jquery-1.11.0.js"></script> 
+    <script src="lib/js/underscore.js"></script>
+    <script src="lib/js/backbone.js"></script>
+
+    <div id="map"></div>
+
+    <script type="text/template" id="map-template">
+      <% _.each(squares, function (row) { %>
+        <div class="row">
+          <% _.each(row, function (square) { %>
+            <div class="square <%= square.name %>"></div>
+          <% }); %>
+        </div>
+      <% }); %>
+    </script>
+
+    <script type="text/javascript">
+      window.exports = {};
+    </script>
+
+    <script src="app/models/player.js"></script>
+    <script src="app/models/map.js"></script>
+    <script src="app/views/player.js"></script>
+    <script src="app/views/map.js"></script>
+    <script src="app/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+body {
+    text-align: center;
+}
+
+#map {
+    display: inline-block;
+    margin: 0 auto;
+}
+
+#map .row {
+    margin-bottom: -4px;
+}
+
+#map .square {
+    margin-right: -4px;
+}
+
+.square {
+    width: 50px;
+    height: 50px;
+    display: inline-block;
+    background-size: 100% auto;
+}
+
+.square.grass {
+    background-image: url('lib/img/terrain/grass.png');
+}
