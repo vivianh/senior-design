@@ -6,7 +6,6 @@
     defaults: {
       xc: 0,
       yc: 0,
-      direction: 'right',
     },
 
     initialize: function (options) {

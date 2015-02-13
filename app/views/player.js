@@ -3,13 +3,13 @@
 
   exports.PlayerView = Backbone.View.extend({
 
-    className: 'playerView',
-
     initialize: function (options) {
+      this.template = _.template($('#player-template').html());
     },
 
     render: function (params) {
-      console.log('playerView rendered');
+      var compiledTemplate = this.template(this.model.toJSON());
+      this.$el.append(compiledTemplate);
     },
 
   });

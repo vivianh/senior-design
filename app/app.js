@@ -12,6 +12,10 @@
   });
   mapView.render();
 
-  var playerView = new exports.PlayerView( { model: player } );
+  var playerView = new exports.PlayerView({
+    model: player,
+    el: '#canvas',
+  });
+  playerView.render();
 
 }());

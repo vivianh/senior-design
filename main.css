@@ -2,7 +2,8 @@ body {
     text-align: center;
 }
 
-#map {
+#canvas {
+    position: relative;
     display: inline-block;
     margin: 0 auto;
 }
@@ -36,4 +37,12 @@ body {
 
 .square.isObstacle {
     background-image: url('lib/img/dirtCaveRockLarge.png');
+}
+
+.player {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-size: 100% auto;
+    background-image: url('lib/img/p3_stand.png');
 }
