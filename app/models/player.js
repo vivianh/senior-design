@@ -4,12 +4,17 @@
   exports.Player = Backbone.Model.extend({
 
     defaults: {
-      xc: 0,
-      yc: 0,
+      row: 0,
+      col: 0,
+      numKeysFound: 0,
     },
 
     initialize: function (options) {
     },
+
+    foundKey: function () {
+      this.set('numKeysFound', this.get('numKeysFound') + 1);
+    }
 
   });
 

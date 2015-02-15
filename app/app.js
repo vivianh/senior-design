@@ -2,20 +2,20 @@
   'use strict';
 
   // Models
-  var map = new exports.Map();
-  var player = new exports.Player();
+  exports.map = new exports.Map();
+  exports.player = new exports.Player();
 
   // Views
-  var mapView = new exports.MapView({
-    model: map,
+  exports.mapView = new exports.MapView({
+    model: exports.map,
     el: '#map',
   });
-  mapView.render();
+  exports.mapView.render();
 
-  var playerView = new exports.PlayerView({
-    model: player,
+  exports.playerView = new exports.PlayerView({
+    model: exports.player,
     el: '#canvas',
   });
-  playerView.render();
+  exports.playerView.render();
 
 }());

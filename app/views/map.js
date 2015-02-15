@@ -5,6 +5,7 @@
 
     initialize: function (options) {
       this.template = _.template($('#map-template').html());
+      this.listenTo(this.model, 'change', this.render);
     },
 
     render: function (params) {

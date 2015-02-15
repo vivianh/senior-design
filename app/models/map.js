@@ -6,6 +6,7 @@
     defaults: {
       width: exports.globals.MAP_WIDTH,
       height: exports.globals.MAP_HEIGHT,
+      numKeys: 0,
     },
 
     initialize: function (options) {
@@ -30,6 +31,7 @@
               className = 'isLock';
             } else if (symbol === exports.globals.CONFIG_SYMBOL_KEY) {
               className = 'isKey';
+              this.set('numKeys', this.get('numKeys') + 1);
             }
           }
 
@@ -42,9 +44,33 @@
       }, this);
     },
 
+    hasObstacle: function (row, col) {
+      return this.get('config')[row][col].name === 'isObstacle';
+    },
+
+    hasKey: function (row, col) {
+      return this.get('config')[row][col].name === 'isKey';
+    },
+
+    removeKey: function (row, col) {
+      var config = _.clone(this.get('config'));
+      config[row][col].name = '';
+      this.set('config', config);
+      this.trigger('change');
+    },
+
+    hasLock: function (row, col) {
+      return this.get('config')[row][col].name === 'isLock';
+    },
+
     mockSetupFile: function () {
-      var file = 'xxxoooxxxoooooo ' +
-                 'KoooooooooooLoo ' +
+      var file = 'ooxoooxxxoooooo ' +
+                 'xoooxxxxKoooLoo ' +
+                 'oooooxxooooxxoo ' +
+                 'oxxoooxoooxxKoo ' +
+                 'oooooxxooooxxxo ' +
+                 'xxxoooxxxooxooo ' +
+                 'xKxooxxooooxxxo ' +
                  'xoooooxooooxxox ';
       return file.split(' ');
     },
