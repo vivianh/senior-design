@@ -11,6 +11,21 @@
 
     initialize: function (options) {
       this.set('config', this.defaultConfig());
+
+      var enemy = new exports.AIPlayer({
+        row: 2,
+        col: 2,
+      });
+      enemy.map = this;
+
+      var enemyView = new exports.AIPlayerView({
+        model: enemy,
+        el: '#canvas',
+      });
+      enemyView.render();
+      enemy.aStar();
+
+      // this.set('enemy', enemy);
     },
 
     defaultConfig: function () {
@@ -39,6 +54,10 @@
             row: row,
             col: col,
             name: className,
+            f: 0,
+            g: 0,
+            h: 0,
+            parent: undefined,
           };
         }, this);
       }, this);
@@ -61,6 +80,27 @@
 
     hasLock: function (row, col) {
       return this.get('config')[row][col].name === 'isLock';
+    },
+
+    getNeighbors: function (row, col) {
+      var neighbors = [];
+      if (this.get('config')[row - 1] &&
+          !this.hasObstacle(row - 1, col)) {
+        neighbors.push(this.get('config')[row - 1][col]);
+      }
+      if (this.get('config')[row][col - 1] &&
+          !this.hasObstacle(row, col - 1)) {
+        neighbors.push(this.get('config')[row][col - 1]);
+      }
+      if (this.get('config')[row + 1] &&
+          !this.hasObstacle(row + 1, col)) {
+        neighbors.push(this.get('config')[row + 1][col]);
+      }
+      if (this.get('config')[row][col + 1] &&
+          !this.hasObstacle(row, col + 1)) {
+        neighbors.push(this.get('config')[row][col + 1]);
+      }
+      return neighbors;
     },
 
     mockSetupFile: function () {

@@ -29,14 +29,21 @@
       </div>
     </script>
 
+    <script type="text/template" id="enemy-template">
+      <div class="enemy" style="top: <%= row * 50 %>px; left: <%= col * 50 %>px;">
+      </div>
+    </script>
+
     <script type="text/javascript">
       window.exports = {};
     </script>
 
     <script src="app/utils.js"></script>
     <script src="app/models/player.js"></script>
+    <script src="app/models/AIPlayer.js"></script>
     <script src="app/models/map.js"></script>
     <script src="app/views/player.js"></script>
+    <script src="app/views/AIPlayer.js"></script>
     <script src="app/views/map.js"></script>
     <script src="app/app.js"></script>
   </body>
