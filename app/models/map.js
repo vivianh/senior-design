@@ -10,22 +10,22 @@
     },
 
     initialize: function (options) {
-      this.set('config', this.defaultConfig());
+      this.set('defaultConfig', this.defaultConfig());
+      this.set('config', this.get('defaultConfig'));
 
-      var enemy = new exports.AIPlayer({
+      exports.enemy = new exports.AIPlayer({
         row: 2,
         col: 2,
+        goalRow: this.get('goalRow'),
+        goalCol: this.get('goalCol'),
+        map: this,
       });
-      enemy.map = this;
 
-      var enemyView = new exports.AIPlayerView({
-        model: enemy,
+      exports.enemyView = new exports.AIPlayerView({
+        model: exports.enemy,
         el: '#canvas',
       });
-      enemyView.render();
-      enemy.aStar();
-
-      // this.set('enemy', enemy);
+      exports.enemyView.render();
     },
 
     defaultConfig: function () {
@@ -44,6 +44,8 @@
               className = 'isObstacle';
             } else if (symbol === exports.globals.CONFIG_SYMBOL_LOCK) {
               className = 'isLock';
+              this.set('goalRow', row);
+              this.set('goalCol', col);
             } else if (symbol === exports.globals.CONFIG_SYMBOL_KEY) {
               className = 'isKey';
               this.set('numKeys', this.get('numKeys') + 1);
@@ -54,10 +56,14 @@
             row: row,
             col: col,
             name: className,
+            iteration: 0,
+            expanded: false,
+            parent: null,
+            /*
             f: 0,
             g: 0,
             h: 0,
-            parent: undefined,
+            */
           };
         }, this);
       }, this);

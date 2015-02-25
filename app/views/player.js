@@ -17,6 +17,7 @@
       var newRow = 0;
       var newCol = 0;
 
+      /*
       if (keyCode === 104) { // H, left
         newCol = currentCol - 1;
         if (newCol >= 0 &&
@@ -25,6 +26,8 @@
           this.model.set({'col': newCol});
         }
       } else if (keyCode === 106) { // J, down
+      */
+      if (keyCode === 106) { // J, down
         newRow = currentRow + 1;
         if (newRow < exports.globals.MAP_HEIGHT &&
             !exports.map.hasObstacle(newRow, currentCol)) {
@@ -46,6 +49,7 @@
           this.model.set({'col': newCol});
         }
       }
+      exports.enemy._aStar(null, {'row': newRow, 'col': newCol});
     },
 
     _checkLockAndKey: function (row, col) {

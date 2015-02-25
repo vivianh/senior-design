@@ -4,8 +4,8 @@
   exports.Player = Backbone.Model.extend({
 
     defaults: {
-      row: 0,
-      col: 0,
+      row: 7,
+      col: 5,
       numKeysFound: 0,
     },
 
