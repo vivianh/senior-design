@@ -7,6 +7,7 @@
     CONFIG_SYMBOL_OBSTACLE: 'x',
     CONFIG_SYMBOL_LOCK:     'L',
     CONFIG_SYMBOL_KEY:      'K',
+    MARGIN:                 2,
   };
 
 }());

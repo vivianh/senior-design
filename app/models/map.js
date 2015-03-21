@@ -59,14 +59,44 @@
             iteration: 0,
             expanded: false,
             parent: null,
-            /*
-            f: 0,
-            g: 0,
-            h: 0,
-            */
           };
         }, this);
       }, this);
+    },
+
+    updateConfig: function (margin) {
+      var rows = _.range(this.get('height'));
+      var cols = _.range(this.get('width') - margin, this.get('width'));
+      var config = this._shiftConfig(margin);
+
+      _.map(rows, function (row) {
+        _.map(cols, function (col) {
+          var className;
+          if (this.hasObstacle(row, col - 1)) {
+            className = 'isObstacle';
+          }
+
+          config[row][col] = {
+            row: row,
+            col: col,
+            name: className,
+            parent: null,
+          }
+        }, this, config);
+      }, this, config);
+      this.set('config', config);
+    },
+
+    _shiftConfig: function (margin) {
+      var rows = _.range(this.get('height'));
+      var cols = _.range(this.get('width') - margin);
+      var config = this.get('config');
+
+      return _.map(rows, function (row) {
+        return _.map(cols, function (col) {
+          return config[row][col + margin];
+        }, config, margin);
+      }, config, margin);
     },
 
     hasObstacle: function (row, col) {

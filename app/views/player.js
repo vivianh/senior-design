@@ -49,6 +49,12 @@
           this.model.set({'col': newCol});
         }
       }
+
+      var margin = exports.globals.MAP_WIDTH - this.model.get('col');
+      if (margin <= exports.globals.MARGIN) {
+        exports.map.updateConfig(margin);
+      }
+
       exports.enemy._aStar(null, {'row': newRow, 'col': newCol});
     },
 
