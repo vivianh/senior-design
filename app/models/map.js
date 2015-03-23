@@ -7,11 +7,13 @@
       width: exports.globals.MAP_WIDTH,
       height: exports.globals.MAP_HEIGHT,
       numKeys: 0,
+      margin: 0,
     },
 
     initialize: function (options) {
       this.set('defaultConfig', this.defaultConfig());
       this.set('config', this.get('defaultConfig'));
+      // this._printConfig();
 
       exports.enemy = new exports.AIPlayer({
         row: 2,
@@ -26,6 +28,29 @@
         el: '#canvas',
       });
       exports.enemyView.render();
+    },
+
+    setMargin: function () {
+      this.set('margin', this.get('margin') + 1);
+      this.set('config', this._updateConfig());
+      // this._printConfig();
+    },
+
+    /** for debugging **/
+    _printConfig: function () {
+      var rows = _.range(this.get('height'));
+      var cols = _.range(this.get('width') + this.get('margin'));
+      for (var x = 0; x < this.get('height'); x++) {
+        var row = '';
+        for (var y = 0; y < this.get('width') + this.get('margin'); y++) {
+          if (this.get('config')[x][y].name === 'isObstacle') {
+            row += 'x';
+          } else {
+            row += 'o';
+          }
+        }
+        console.log(row);
+      }
     },
 
     defaultConfig: function () {
@@ -64,39 +89,30 @@
       }, this);
     },
 
-    updateConfig: function (margin) {
+    _updateConfig: function () {
       var rows = _.range(this.get('height'));
-      var cols = _.range(this.get('width') - margin, this.get('width'));
-      var config = this._shiftConfig(margin);
-
-      _.map(rows, function (row) {
-        _.map(cols, function (col) {
-          var className;
-          if (this.hasObstacle(row, col - 1)) {
-            className = 'isObstacle';
-          }
-
-          config[row][col] = {
-            row: row,
-            col: col,
-            name: className,
-            parent: null,
-          }
-        }, this, config);
-      }, this, config);
-      this.set('config', config);
-    },
-
-    _shiftConfig: function (margin) {
-      var rows = _.range(this.get('height'));
-      var cols = _.range(this.get('width') - margin);
-      var config = this.get('config');
+      var cols = _.range(this.get('width') + this.get('margin'));
 
       return _.map(rows, function (row) {
         return _.map(cols, function (col) {
-          return config[row][col + margin];
-        }, config, margin);
-      }, config, margin);
+          if (this.get('config')[row][col]) {
+            return this.get('config')[row][col];
+          } else {
+            var className;
+            var random = Math.round(Math.random());
+            if (random === 0) {
+              className = 'isObstacle';
+            }
+
+            return {
+              row: row,
+              col: col,
+              name: className,
+              parent: null,
+            };
+          }
+        }, this);
+      }, this);
     },
 
     hasObstacle: function (row, col) {

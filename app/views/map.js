@@ -10,7 +10,8 @@
 
     render: function (params) {
       var compiledTemplate = this.template({
-        'squares': this.model.toJSON()['config']
+        'squares': this.model.toJSON()['config'],
+        'margin': this.model.get('margin'),
       });
       this.$el.html(compiledTemplate);
     },

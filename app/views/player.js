@@ -17,7 +17,6 @@
       var newRow = 0;
       var newCol = 0;
 
-      /*
       if (keyCode === 104) { // H, left
         newCol = currentCol - 1;
         if (newCol >= 0 &&
@@ -26,8 +25,7 @@
           this.model.set({'col': newCol});
         }
       } else if (keyCode === 106) { // J, down
-      */
-      if (keyCode === 106) { // J, down
+      // if (keyCode === 106) { // J, down
         newRow = currentRow + 1;
         if (newRow < exports.globals.MAP_HEIGHT &&
             !exports.map.hasObstacle(newRow, currentCol)) {
@@ -43,16 +41,14 @@
         }
       } else if (keyCode === 108) { // L, right
         newCol = currentCol + 1;
-        if (newCol < exports.globals.MAP_WIDTH &&
-            !exports.map.hasObstacle(currentRow, newCol)) {
+        if (!exports.map.hasObstacle(currentRow, newCol)) {
           this._checkLockAndKey(currentRow, newCol);
-          this.model.set({'col': newCol});
+          this.model.set({
+            'col': newCol,
+            'margin': this.model.get('margin') + 1,
+          });
+          exports.map.setMargin();
         }
-      }
-
-      var margin = exports.globals.MAP_WIDTH - this.model.get('col');
-      if (margin <= exports.globals.MARGIN) {
-        exports.map.updateConfig(margin);
       }
 
       exports.enemy._aStar(null, {'row': newRow, 'col': newCol});
@@ -70,7 +66,12 @@
 
     render: function (params) {
       $('.player').remove();
-      var compiledTemplate = this.template(this.model.toJSON());
+      var compiledTemplate = this.template(
+        _.extend(
+          this.model.toJSON(),
+          {'col': this.model.get('col') - this.model.get('margin')}
+        )
+      );
       this.$el.append(compiledTemplate);
     },
 

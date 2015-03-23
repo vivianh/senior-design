@@ -4,7 +4,7 @@
     <link rel="stylesheet" type="text/css" href="main.css">
   </head>
   <body>
-    <script src="lib/js/jquery-1.11.0.js"></script> 
+    <script src="lib/js/jquery-1.11.0.js"></script>
     <script src="lib/js/underscore.js"></script>
     <script src="lib/js/backbone.js"></script>
 
@@ -15,10 +15,12 @@
     <script type="text/template" id="map-template">
       <% _.each(squares, function (row) { %>
         <div class="row">
-          <% _.each(row, function (square) { %>
-            <div class="square bg">
-              <div class="square <%= square.name %>"></div>
-            </div>
+          <% _.each(row, function (square, index) { %>
+            <% if (index >= margin) { %>
+              <div class="square bg">
+                <div class="square <%= square.name %>"></div>
+              </div>
+            <% } %>
           <% }); %>
         </div>
       <% }); %>

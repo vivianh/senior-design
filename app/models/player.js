@@ -5,8 +5,9 @@
 
     defaults: {
       row: 7,
-      col: 5,
+      col: 4,
       numKeysFound: 0,
+      margin: 0,
     },
 
     initialize: function (options) {

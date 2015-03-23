@@ -3,6 +3,8 @@
 
   exports.AIPlayer = Backbone.Model.extend({
     defaults: {
+      row: 0,
+      col: 0,
       deletedTiles: [],
       /* set of tiles that have been searched */
       closedTiles: [],

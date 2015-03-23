@@ -20,7 +20,10 @@
         this.model._aStar();
       }
       $('.enemy').remove();
-      var compiledTemplate = this.template(this.model.toJSON());
+      var margin = exports.map ? exports.map.get('margin') : 0;
+      var compiledTemplate = this.template(
+        _.extend(this.model.toJSON(), {'col': this.model.get('col') - margin})
+      );
       this.$el.append(compiledTemplate);
     },
 
