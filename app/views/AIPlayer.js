@@ -11,7 +11,7 @@
       this.options = _.extend(this.defaults, this.options);
       this.template = _.template($('#enemy-template').html());
       this.listenTo(this.model, 'change', this.render);
-      setInterval(_.bind(this._move, this), 500);
+      setInterval(_.bind(this._move, this), 300);
     },
 
     render: function (params) {

@@ -16,7 +16,8 @@
       <% _.each(squares, function (row) { %>
         <div class="row">
           <% _.each(row, function (square, index) { %>
-            <% if (index >= margin) { %>
+            <% if (index >= margin &&
+                   index < exports.globals.MAP_WIDTH + margin) { %>
               <div class="square bg">
                 <div class="square <%= square.name %>"></div>
               </div>

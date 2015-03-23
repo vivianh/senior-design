@@ -19,10 +19,16 @@
 
       if (keyCode === 104) { // H, left
         newCol = currentCol - 1;
-        if (newCol >= 0 &&
-            !exports.map.hasObstacle(currentRow, newCol)) {
+        // if (newCol >= this.model.get('margin') &&
+        if (!exports.map.hasObstacle(currentRow, newCol)) {
           this._checkLockAndKey(currentRow, newCol);
-          this.model.set({'col': newCol});
+          var margin =
+            this.model.get('margin') <= 0 ? 0 : this.model.get('margin') - 1;
+          this.model.set({
+            'col': newCol,
+            'margin': margin,
+          });
+          exports.map.setMargin(false);
         }
       } else if (keyCode === 106) { // J, down
       // if (keyCode === 106) { // J, down
@@ -47,7 +53,7 @@
             'col': newCol,
             'margin': this.model.get('margin') + 1,
           });
-          exports.map.setMargin();
+          exports.map.setMargin(true);
         }
       }
 

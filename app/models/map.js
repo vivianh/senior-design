@@ -8,6 +8,7 @@
       height: exports.globals.MAP_HEIGHT,
       numKeys: 0,
       margin: 0,
+      maxMargin: 0,
     },
 
     initialize: function (options) {
@@ -30,19 +31,29 @@
       exports.enemyView.render();
     },
 
-    setMargin: function () {
-      this.set('margin', this.get('margin') + 1);
-      this.set('config', this._updateConfig());
-      // this._printConfig();
+    setMargin: function (incMargin) {
+      var newMargin = this.get('margin');
+      if (incMargin) {
+        newMargin = newMargin + 1;
+        this.set('margin', newMargin);
+        if (newMargin > this.get('maxMargin')) {
+          this.set('maxMargin', newMargin);
+          this.set('config', this._updateConfig());
+        }
+      } else {
+        newMargin = newMargin <= 0 ? 0 : newMargin - 1;
+        this.set('margin', newMargin);
+      }
     },
 
     /** for debugging **/
     _printConfig: function () {
+      var margin = this.get('margin');
       var rows = _.range(this.get('height'));
-      var cols = _.range(this.get('width') + this.get('margin'));
+      var cols = _.range(this.get('width') + margin);
       for (var x = 0; x < this.get('height'); x++) {
         var row = '';
-        for (var y = 0; y < this.get('width') + this.get('margin'); y++) {
+        for (var y = margin; y < this.get('width') + margin; y++) {
           if (this.get('config')[x][y].name === 'isObstacle') {
             row += 'x';
           } else {

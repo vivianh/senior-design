@@ -26,7 +26,7 @@
     },
 
     _aStar: function (startTile, goalTile) {
-      var config = this.get('map').get('defaultConfig');
+      var config = this.get('map').get('config');
       if (!startTile) {
         startTile = config[this.get('row')][this.get('col')];
         startTile.parent = null;
