@@ -9,12 +9,14 @@
       numKeys: 0,
       margin: 0,
       maxMargin: 0,
+      config: [],
+      nextConfig: [],
     },
 
     initialize: function (options) {
       this.set('defaultConfig', this.defaultConfig());
       this.set('config', this.get('defaultConfig'));
-      // this._printConfig();
+      this.set('nextConfig', this._augmentConfig());
 
       exports.enemy = new exports.AIPlayer({
         row: 2,
@@ -38,7 +40,11 @@
         this.set('margin', newMargin);
         if (newMargin > this.get('maxMargin')) {
           this.set('maxMargin', newMargin);
+        }
+        if (this.get('config')[0].length <
+            this.get('width') + this.get('margin')) {
           this.set('config', this._updateConfig());
+          this.set('nextConfig', this._augmentConfig());
         }
       } else {
         newMargin = newMargin <= 0 ? 0 : newMargin - 1;
@@ -47,17 +53,20 @@
     },
 
     /** for debugging **/
-    _printConfig: function () {
-      var margin = this.get('margin');
-      var rows = _.range(this.get('height'));
-      var cols = _.range(this.get('width') + margin);
-      for (var x = 0; x < this.get('height'); x++) {
+    _printConfig: function (config) {
+      for (var x = 0; x < config.length; x++) {
         var row = '';
-        for (var y = margin; y < this.get('width') + margin; y++) {
-          if (this.get('config')[x][y].name === 'isObstacle') {
+        for (var y = 0; y < config[0].length; y++) {
+          if (config[x][y].name === 'isObstacle') {
             row += 'x';
-          } else {
+          } else if (config[x][y].name === 'isEmpty') {
             row += 'o';
+          } else if (config[x][y].name === 'isRoom') {
+            row += 'z';
+          } else if (config[x][y].name === 'isConnector') {
+            row += '=';
+          } else {
+            row += '?';
           }
         }
         console.log(row);
@@ -85,6 +94,8 @@
             } else if (symbol === exports.globals.CONFIG_SYMBOL_KEY) {
               className = 'isKey';
               this.set('numKeys', this.get('numKeys') + 1);
+            } else {
+              className = 'isEmpty';
             }
           }
 
@@ -101,29 +112,127 @@
     },
 
     _updateConfig: function () {
-      var rows = _.range(this.get('height'));
-      var cols = _.range(this.get('width') + this.get('margin'));
+      var rows = this.get('height');
+      var configWidth = this.get('config')[0].length;
+      var updatedConfig = _.clone(this.get('config'));
 
-      return _.map(rows, function (row) {
-        return _.map(cols, function (col) {
-          if (this.get('config')[row][col]) {
-            return this.get('config')[row][col];
-          } else {
-            var className;
-            var random = Math.round(Math.random());
-            if (random === 0) {
-              className = 'isObstacle';
+      for (var r = 0; r < rows; r++) {
+        for (var c = 0; c < this.get('nextConfig')[0].length; c++) {
+          updatedConfig[r][configWidth + c] = {
+            row: r,
+            col: configWidth + c,
+            name: this.get('nextConfig')[r][c].name,
+          };
+        }
+      }
+
+      return updatedConfig;
+    },
+
+    _augmentConfig: function () {
+      var height = this.get('height');
+      var augmentWidth = 11;
+
+      /* create 2-d array of tiles */
+      /* isObstacle is default tile state */
+      var augment = _.map(_.range(height), function (r) {
+          return _.map(_.range(augmentWidth), function (c) {
+            if (c === 0) {
+              var len = this.get('config')[0].length - 1;
+              return this.get('config')[r][len];
+            } else {
+              return {
+                row: r,
+                col: c,
+                name: 'isObstacle',
+              };
             }
-
-            return {
-              row: row,
-              col: col,
-              name: className,
-              parent: null,
-            };
-          }
+          }, this);
         }, this);
-      }, this);
+
+      /* set 2x2 'open/empty tiles' */
+      for (var x = 0; x < 30; x ++) {
+        var randomRow = Math.round(Math.random() * (height - 2));
+        var randomCol = Math.round(Math.random() * (augmentWidth - 2));
+        if (this._isDefault(augment, randomRow, randomCol)) {
+          augment = this._setRoom(augment, randomRow, randomCol);
+        }
+      }
+
+      augment = this._connectRooms(this._DFS(augment));
+
+      /* remove the first column copied from current config */
+      for (var r = 0; r < augment.length; r++) {
+        augment[r].shift();
+      }
+
+      return augment;
+    },
+
+    /* pseudo DFS */
+    _DFS: function (config) {
+      for (var r = 0; r < config.length; r++) {
+        for (var c = 0; c < config[0].length; c++) {
+          if (config[r][c].name !== 'isRoom') {
+            if (config[r][c - 1] && config[r][c - 1].name === 'isRoom') continue;
+            if (config[r][c + 1] && config[r][c + 1].name === 'isRoom') continue;
+            if (config[r + 1] && config[r + 1][c].name === 'isRoom') continue;
+            if (config[r - 1] && config[r - 1][c].name === 'isRoom') continue;
+            if (config[r + 1] && config[r + 1][c + 1] &&
+                config[r + 1][c + 1].name === 'isRoom') continue;
+            if (config[r + 1] && config[r + 1][c - 1] &&
+                config[r + 1][c - 1].name === 'isRoom') continue;
+            if (config[r - 1] && config[r - 1][c + 1] &&
+                config[r - 1][c + 1].name === 'isRoom') continue;
+            if (config[r - 1] && config[r - 1][c - 1] &&
+                config[r - 1][c - 1].name === 'isRoom') continue;
+            config[r][c].name = 'isEmpty'
+          }
+        }
+      }
+      return config;
+    },
+
+    _isDefault: function (config, row, col) {
+      return config[row][col].name === 'isObstacle' &&
+             config[row + 1][col].name === 'isObstacle' &&
+             config[row][col + 1].name === 'isObstacle' &&
+             config[row + 1][col + 1].name === 'isObstacle';
+    },
+
+    _setRoom: function (config, row, col) {
+      config[row][col].name = 'isRoom';
+      config[row + 1][col].name = 'isRoom';
+      config[row][col + 1].name = 'isRoom';
+      config[row + 1][col + 1].name = 'isRoom';
+      return config;
+    },
+
+    /** connect Rooms & psuedo DFS maze **/
+    _connectRooms: function (config) {
+      for (var r = 0; r < config.length; r++) {
+        for (var c = 0; c < config[0].length; c++) {
+          if (config[r][c].name === 'isObstacle') {
+            if (config[r][c - 1] && config[r][c + 1] &&
+                this._canConnect(config[r][c - 1], config[r][c + 1])) {
+              config[r][c].name = 'isConnector';
+            } else if (config[r + 1] && config[r - 1] &&
+                       this._canConnect(config[r + 1][c], config[r - 1][c])) {
+              config[r][c].name = 'isConnector';
+            }
+          }
+        }
+      }
+      return config;
+    },
+
+    _canConnect: function (tile1, tile2) {
+      /*
+      return (tile1.name === 'isRoom' || tile1.name === 'isEmpty') &&
+             (tile2.name === 'isRoom' || tile2.name === 'isEmpty');
+      */
+      return (tile1.name === 'isRoom' && tile2.name === 'isEmpty') ||
+             (tile1.name === 'isEmpty' && tile2.name === 'isRoom');
     },
 
     hasObstacle: function (row, col) {

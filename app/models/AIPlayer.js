@@ -31,6 +31,12 @@
         startTile = config[this.get('row')][this.get('col')];
         startTile.parent = null;
       }
+      if (!goalTile) {
+        goalTile = {
+          row: this.get('goalRow'),
+          col: this.get('goalCol'),
+        };
+      }
       this.set('openTiles', [startTile]);
       this.set('closedTiles', []);
 
@@ -77,8 +83,8 @@
             neighbor.h = this._heuristic(
               neighbor.row,
               neighbor.col,
-              this.get('goalRow'),
-              this.get('goalCol')
+              goalTile.row,
+              goalTile.col
             );
             this.get('openTiles').push(neighbor);
           } else if (gScore < neighbor.g) {
