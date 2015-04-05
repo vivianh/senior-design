@@ -17,6 +17,31 @@
       var newRow = 0;
       var newCol = 0;
 
+      if (keyCode === 120) { // x, clear blockade!
+        if (this.model.facingLeft()) {
+          newCol = currentCol - 1;
+          if (exports.map.hasObstacle(currentRow, newCol)) {
+            exports.map.removeObstacle(currentRow, newCol);
+          }
+        } else if (this.model.facingRight()) {
+          newCol = currentCol + 1;
+          if (exports.map.hasObstacle(currentRow, newCol)) {
+            exports.map.removeObstacle(currentRow, newCol);
+          }
+        } else if (this.model.facingUp()) {
+          newRow = currentRow - 1;
+          if (exports.map.hasObstacle(newRow, currentCol)) {
+            exports.map.removeObstacle(newRow, currentCol);
+          }
+        } else if (this.model.facingDown()) {
+          newRow = currentRow + 1;
+          if (exports.map.hasObstacle(newRow, currentCol)) {
+            exports.map.removeObstacle(newRow, currentCol);
+          }
+        }
+        return;
+      }
+
       if (keyCode === 104) { // H, left
         newCol = currentCol - 1;
         // if (newCol >= this.model.get('margin') &&
@@ -27,23 +52,29 @@
           this.model.set({
             'col': newCol,
             'margin': margin,
+            'direction': exports.globals.MAP_DIRECTION_LEFT,
           });
           exports.map.setMargin(false);
         }
       } else if (keyCode === 106) { // J, down
-      // if (keyCode === 106) { // J, down
         newRow = currentRow + 1;
         if (newRow < exports.globals.MAP_HEIGHT &&
             !exports.map.hasObstacle(newRow, currentCol)) {
           this._checkLockAndKey(newRow, currentCol);
-          this.model.set({'row': newRow});
+          this.model.set({
+            'row': newRow,
+            'direction': exports.globals.MAP_DIRECTION_DOWN,
+          });
         }
       } else if (keyCode === 107) { // K, up
         newRow = currentRow - 1;
         if (newRow >= 0 &&
             !exports.map.hasObstacle(newRow, currentCol)) {
           this._checkLockAndKey(newRow, currentCol);
-          this.model.set({'row': newRow});
+          this.model.set({
+            'row': newRow,
+            'direction': exports.globals.MAP_DIRECTION_UP,
+          });
         }
       } else if (keyCode === 108) { // L, right
         newCol = currentCol + 1;
@@ -52,6 +83,7 @@
           this.model.set({
             'col': newCol,
             'margin': this.model.get('margin') + 1,
+            'direction': exports.globals.MAP_DIRECTION_RIGHT,
           });
           exports.map.setMargin(true);
         }
@@ -63,7 +95,9 @@
     _checkLockAndKey: function (row, col) {
       if (exports.map.hasKey(row, col)) {
         this.model.foundKey();
-        exports.map.removeKey(row, col);
+        if (exports.map.removeKey(row, col)) {
+          this.model.incrementScore();
+        }
       } else if (exports.map.hasLock(row, col) &&
                  this.numKeysFound === exports.map.numKeys) {
         console.log('NEXT LEVEL');

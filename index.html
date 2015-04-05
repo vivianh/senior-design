@@ -28,8 +28,13 @@
     </script>
 
     <script type="text/template" id="player-template">
-      <div class="player" style="top: <%= row * 50 %>px; left: <%= col * 50 %>px;">
-      </div>
+      <% if (direction === exports.globals.MAP_DIRECTION_LEFT) { %>
+        <div class="player left"
+      <% } else { %>
+        <div class="player"
+      <% } %>
+          style="top: <%= row * 50 %>px; left: <%= col * 50 %>px;">
+        </div>
     </script>
 
     <script type="text/template" id="enemy-template">

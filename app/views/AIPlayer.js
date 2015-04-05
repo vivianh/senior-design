@@ -11,7 +11,7 @@
       this.options = _.extend(this.defaults, this.options);
       this.template = _.template($('#enemy-template').html());
       this.listenTo(this.model, 'change', this.render);
-      setInterval(_.bind(this._move, this), 300);
+      setInterval(_.bind(this._move, this), 250);
     },
 
     render: function (params) {
@@ -21,9 +21,11 @@
       }
       $('.enemy').remove();
       var margin = exports.map ? exports.map.get('margin') : 0;
-      var compiledTemplate = this.template(
-        _.extend(this.model.toJSON(), {'col': this.model.get('col') - margin})
-      );
+      if (this.model.get('col') > margin) {
+        var compiledTemplate = this.template(
+          _.extend(this.model.toJSON(), {'col': this.model.get('col') - margin})
+        );
+      }
       this.$el.append(compiledTemplate);
     },
 

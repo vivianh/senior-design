@@ -118,10 +118,17 @@
 
       for (var r = 0; r < rows; r++) {
         for (var c = 0; c < this.get('nextConfig')[0].length; c++) {
+          var className = this.get('nextConfig')[r][c].name;
+          if (className === 'isEmpty' || className === 'isRoom') {
+            var random = Math.round(Math.random() * 10);
+            if (random < 1) {
+              className = 'isKey';
+            }
+          }
           updatedConfig[r][configWidth + c] = {
             row: r,
             col: configWidth + c,
-            name: this.get('nextConfig')[r][c].name,
+            name: className,
           };
         }
       }
@@ -227,16 +234,23 @@
     },
 
     _canConnect: function (tile1, tile2) {
-      /*
+                   /*
       return (tile1.name === 'isRoom' || tile1.name === 'isEmpty') &&
              (tile2.name === 'isRoom' || tile2.name === 'isEmpty');
-      */
+             */
       return (tile1.name === 'isRoom' && tile2.name === 'isEmpty') ||
              (tile1.name === 'isEmpty' && tile2.name === 'isRoom');
     },
 
     hasObstacle: function (row, col) {
       return this.get('config')[row][col].name === 'isObstacle';
+    },
+
+    removeObstacle: function (row, col) {
+      var newConfig = _.clone(this.get('config'));
+      newConfig[row][col].name = '';
+      this.set('config', newConfig);
+      this.trigger('change');
     },
 
     hasKey: function (row, col) {
@@ -248,6 +262,7 @@
       config[row][col].name = '';
       this.set('config', config);
       this.trigger('change');
+      return true;
     },
 
     hasLock: function (row, col) {
