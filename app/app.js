@@ -18,4 +18,11 @@
   });
   exports.mapView.render();
 
+  exports.state = new exports.State();
+  exports.stateView = new exports.StateView({
+    model: exports.state,
+    el: '#state',
+  });
+  exports.stateView.render();
+
 }());

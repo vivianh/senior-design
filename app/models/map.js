@@ -18,7 +18,7 @@
       this.set('config', this.get('defaultConfig'));
       this.set('nextConfig', this._augmentConfig());
 
-      exports.enemy = new exports.AIPlayer({
+      var enemy = new exports.AIPlayer({
         row: 2,
         col: 2,
         goalRow: this.get('goalRow'),
@@ -26,11 +26,13 @@
         map: this,
       });
 
-      exports.enemyView = new exports.AIPlayerView({
-        model: exports.enemy,
+      var enemyView = new exports.AIPlayerView({
+        model: enemy,
         el: '#canvas',
       });
-      exports.enemyView.render();
+      enemyView.render();
+
+      exports.enemies = [enemy];
     },
 
     setMargin: function (incMargin) {
@@ -234,10 +236,6 @@
     },
 
     _canConnect: function (tile1, tile2) {
-                   /*
-      return (tile1.name === 'isRoom' || tile1.name === 'isEmpty') &&
-             (tile2.name === 'isRoom' || tile2.name === 'isEmpty');
-             */
       return (tile1.name === 'isRoom' && tile2.name === 'isEmpty') ||
              (tile1.name === 'isEmpty' && tile2.name === 'isRoom');
     },

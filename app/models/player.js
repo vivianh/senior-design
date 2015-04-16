@@ -9,7 +9,6 @@
       margin: 0,
       numKeysFound: 0,
       row: 7,
-      score: 0,
     },
 
     initialize: function (options) {
@@ -33,10 +32,6 @@
 
     facingDown: function () {
       return this.get('direction') === exports.globals.MAP_DIRECTION_DOWN;
-    },
-
-    incrementScore: function() {
-      this.set('score', this.get('score') + exports.globals.SCORE_INCREMENT_KEY);
     },
 
   });

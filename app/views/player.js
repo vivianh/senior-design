@@ -89,14 +89,16 @@
         }
       }
 
-      exports.enemy._aStar(null, {'row': newRow, 'col': newCol});
+      for (var i = 0; i < exports.enemies.length; i++) {
+        exports.enemies[i]._aStar(null, {'row': newRow, 'col': newCol});
+      }
     },
 
     _checkLockAndKey: function (row, col) {
       if (exports.map.hasKey(row, col)) {
         this.model.foundKey();
         if (exports.map.removeKey(row, col)) {
-          this.model.incrementScore();
+          exports.state.incrementScore();
         }
       } else if (exports.map.hasLock(row, col) &&
                  this.numKeysFound === exports.map.numKeys) {
