@@ -11,15 +11,20 @@
 
     initialize: function (options) {
       this.set('startTime', new Date());
-      setInterval(_.bind(this._updateState, this), 250);
+      this.set('intervalId', setInterval(_.bind(this._updateState, this), 250));
     },
 
     _updateState: function () {
       this.set('timeElapsed', new Date() - this.get('startTime'));
     },
 
-    incrementScore: function() {
+    incrementScore: function () {
       this.set('score', this.get('score') + exports.globals.SCORE_INCREMENT_KEY);
+    },
+
+    endGame: function () {
+      console.log('game over');
+      clearInterval(this.get('intervalId'));
     },
 
   });

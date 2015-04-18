@@ -8,7 +8,7 @@
       this.options.firstRender = true;
       this.template = _.template($('#enemy-template').html());
       this.listenTo(this.model, 'change', this.render);
-      setInterval(_.bind(this._move, this), 250);
+      this.options.intervalId = setInterval(_.bind(this._move, this), 250);
     },
 
     render: function (params) {
@@ -38,7 +38,8 @@
           'col': nextTile.col,
         });
       } else {
-        clearInterval();
+        exports.state.endGame();
+        clearInterval(this.options.intervalId);
       }
     },
 
