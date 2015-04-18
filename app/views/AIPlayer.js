@@ -3,12 +3,9 @@
 
   exports.AIPlayerView = Backbone.View.extend({
 
-    defaults: {
-      firstRender: true,
-    },
-
     initialize: function (options) {
-      this.options = _.extend(this.defaults, this.options);
+      this.options = options;
+      this.options.firstRender = true;
       this.template = _.template($('#enemy-template').html());
       this.listenTo(this.model, 'change', this.render);
       setInterval(_.bind(this._move, this), 250);
@@ -19,11 +16,15 @@
         this.options.firstRender = false;
         this.model._aStar();
       }
-      $('.enemy').remove();
+      var className = '.' + (this.options.className);
+      $(className).remove();
       var margin = exports.map ? exports.map.get('margin') : 0;
       if (this.model.get('col') > margin) {
         var compiledTemplate = this.template(
-          _.extend(this.model.toJSON(), {'col': this.model.get('col') - margin})
+          _.extend(this.model.toJSON(), {
+            'col': this.model.get('col') - margin,
+            'className': this.options.className,
+          })
         );
       }
       this.$el.append(compiledTemplate);

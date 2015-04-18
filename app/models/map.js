@@ -19,7 +19,7 @@
       this.set('nextConfig', this._augmentConfig());
 
       var enemy = new exports.AIPlayer({
-        row: 2,
+        row: 1,
         col: 2,
         goalRow: this.get('goalRow'),
         goalCol: this.get('goalCol'),
@@ -29,10 +29,26 @@
       var enemyView = new exports.AIPlayerView({
         model: enemy,
         el: '#canvas',
+        className: 'enemy1',
       });
       enemyView.render();
 
-      exports.enemies = [enemy];
+      var enemy2 = new exports.AIPlayer({
+        row: 2,
+        col: 9,
+        goalRow: this.get('goalRow'),
+        goalCol: this.get('goalCol'),
+        map: this,
+      });
+
+      var enemyView2 = new exports.AIPlayerView({
+        model: enemy2,
+        el: '#canvas',
+        className: 'enemy2',
+      });
+      enemyView2.render();
+
+      exports.enemies = [enemy, enemy2];
     },
 
     setMargin: function (incMargin) {
