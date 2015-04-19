@@ -24,6 +24,7 @@
         goalRow: this.get('goalRow'),
         goalCol: this.get('goalCol'),
         map: this,
+        active: true,
       });
 
       var enemyView = new exports.AIPlayerView({
@@ -39,6 +40,7 @@
         goalRow: this.get('goalRow'),
         goalCol: this.get('goalCol'),
         map: this,
+        active: false,
       });
 
       var enemyView2 = new exports.AIPlayerView({

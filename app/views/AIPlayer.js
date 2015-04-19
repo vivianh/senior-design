@@ -37,6 +37,9 @@
           'row': nextTile.row,
           'col': nextTile.col,
         });
+        if (this.model.get('path').length === 1 && !this.model.get('active')) {
+          this.model.loiter();
+        }
       } else {
         exports.state.endGame();
         clearInterval(this.options.intervalId);

@@ -12,6 +12,10 @@
     MAP_DIRECTION_UP:       2,
     MAP_DIRECTION_DOWN:     3,
     SCORE_INCREMENT_KEY:    10,
+    AI_TARGET_RIGHT:        0,
+    AI_TARGET_LEFT:         1,
+    AI_THRESHOLD:           4,
+    LOITER_PATH_OFFSET:     5,
   };
 
 }());

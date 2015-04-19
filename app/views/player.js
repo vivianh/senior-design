@@ -90,7 +90,8 @@
       }
 
       for (var i = 0; i < exports.enemies.length; i++) {
-        exports.enemies[i]._aStar(null, {'row': newRow, 'col': newCol});
+        // exports.enemies[i]._aStar(null, {'row': newRow, 'col': newCol}, i);
+        exports.enemies[i].detectPlayer({'row': newRow, 'col': newCol}, i);
       }
     },
 
