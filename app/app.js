@@ -1,6 +1,13 @@
 (function () {
   'use strict';
 
+  exports.state = new exports.State();
+  exports.stateView = new exports.StateView({
+    model: exports.state,
+    el: '#state',
+  });
+  exports.stateView.render();
+
   // Models
   exports.player = new exports.Player();
   exports.map = new exports.Map();
@@ -17,12 +24,5 @@
     el: '#map',
   });
   exports.mapView.render();
-
-  exports.state = new exports.State();
-  exports.stateView = new exports.StateView({
-    model: exports.state,
-    el: '#state',
-  });
-  exports.stateView.render();
 
 }());

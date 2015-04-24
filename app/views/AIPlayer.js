@@ -8,13 +8,13 @@
       this.options.firstRender = true;
       this.template = _.template($('#enemy-template').html());
       this.listenTo(this.model, 'change', this.render);
-      this.options.intervalId = setInterval(_.bind(this._move, this), 250);
+      this.options.intervalId = setInterval(_.bind(this._move, this), 300);
     },
 
     render: function (params) {
       if (this.options.firstRender) {
         this.options.firstRender = false;
-        this.model._aStar();
+        this.model.loiter();
       }
       var className = '.' + (this.options.className);
       $(className).remove();
@@ -31,6 +31,7 @@
     },
 
     _move: function () {
+      if (this.options.firstRender) return;
       if (this.model.get('path').length > 0) {
         var nextTile = this.model.get('path').shift();
         this.model.set({

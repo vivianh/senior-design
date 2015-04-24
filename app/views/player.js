@@ -14,8 +14,8 @@
       var keyCode = e.keyCode;
       var currentRow = this.model.get('row');
       var currentCol = this.model.get('col');
-      var newRow = 0;
-      var newCol = 0;
+      var newRow = currentRow;
+      var newCol = currentCol;
 
       if (keyCode === 120) { // x, clear blockade!
         if (this.model.facingLeft()) {
@@ -44,7 +44,6 @@
 
       if (keyCode === 104) { // H, left
         newCol = currentCol - 1;
-        // if (newCol >= this.model.get('margin') &&
         if (!exports.map.hasObstacle(currentRow, newCol)) {
           this._checkLockAndKey(currentRow, newCol);
           var margin =
@@ -90,8 +89,7 @@
       }
 
       for (var i = 0; i < exports.enemies.length; i++) {
-        // exports.enemies[i]._aStar(null, {'row': newRow, 'col': newCol}, i);
-        exports.enemies[i].detectPlayer({'row': newRow, 'col': newCol}, i);
+        exports.enemies[i].detectPlayer({'row': newRow, 'col': newCol});
       }
     },
 

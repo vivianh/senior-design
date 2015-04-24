@@ -14,43 +14,10 @@
     },
 
     initialize: function (options) {
+      exports.enemies = [];
       this.set('defaultConfig', this.defaultConfig());
       this.set('config', this.get('defaultConfig'));
       this.set('nextConfig', this._augmentConfig());
-
-      var enemy = new exports.AIPlayer({
-        row: 1,
-        col: 2,
-        goalRow: this.get('goalRow'),
-        goalCol: this.get('goalCol'),
-        map: this,
-        active: true,
-      });
-
-      var enemyView = new exports.AIPlayerView({
-        model: enemy,
-        el: '#canvas',
-        className: 'enemy1',
-      });
-      enemyView.render();
-
-      var enemy2 = new exports.AIPlayer({
-        row: 2,
-        col: 9,
-        goalRow: this.get('goalRow'),
-        goalCol: this.get('goalCol'),
-        map: this,
-        active: false,
-      });
-
-      var enemyView2 = new exports.AIPlayerView({
-        model: enemy2,
-        el: '#canvas',
-        className: 'enemy2',
-      });
-      enemyView2.render();
-
-      exports.enemies = [enemy, enemy2];
     },
 
     setMargin: function (incMargin) {
@@ -114,6 +81,24 @@
             } else if (symbol === exports.globals.CONFIG_SYMBOL_KEY) {
               className = 'isKey';
               this.set('numKeys', this.get('numKeys') + 1);
+            } else if (symbol === exports.globals.CONFIG_SYMBOL_ENEMY) {
+              var enemy = new exports.AIPlayer({
+                row: row,
+                col: col,
+                centerRow: row,
+                centerCol: col,
+                map: this,
+                active: false,
+              });
+
+              var enemyView = new exports.AIPlayerView({
+                model: enemy,
+                el: '#canvas',
+                className: 'enemy' + row + col,
+              });
+
+              exports.enemies.push(enemy);
+              className = 'isEmpty';
             } else {
               className = 'isEmpty';
             }
@@ -143,6 +128,25 @@
             var random = Math.round(Math.random() * 10);
             if (random < 1) {
               className = 'isKey';
+            } else if (random < 2) {
+              // create 'enemy'
+              var enemy = new exports.AIPlayer({
+                row: r,
+                col: c,
+                centerRow: r,
+                centerCol: c,
+                map: this,
+                active: false,
+              });
+
+              var enemyView = new exports.AIPlayerView({
+                model: enemy,
+                el: '#canvas',
+                className: 'enemy' + r + c,
+              });
+
+              exports.enemies.push(enemy);
+              console.log('creating enemy');
             }
           }
           updatedConfig[r][configWidth + c] = {
@@ -308,8 +312,8 @@
 
     mockSetupFile: function () {
       var file = 'ooxoooxxxoooooo ' +
-                 'xoooxxxxKoooLoo ' +
-                 'oooooxxooooxxoo ' +
+                 'xoEoxxxxKoooLoo ' +
+                 'oooooxxooEoxxoo ' +
                  'oxxoooxoooxxKoo ' +
                  'oooooxxooooxxxo ' +
                  'xxxoooxxxooxooo ' +

@@ -25,31 +25,11 @@
       return d1 + d2;
     },
 
-    // lower = better
-    _newHeuristic: function (row0, col0, row1, col1, direction) {
-      var d1 = Math.abs(row1 - row0);
-      var d2 = Math.abs(col1 - col0);
-      var diff = col1 - col0;
-      var weight = 1;
-      if (direction === exports.globals.AI_TARGET_RIGHT && (diff > 0) ||
-          direction === exports.globals.AI_TARGET_LEFT && (diff < 0)) {
-        weight = 0.5;
-      }
-      console.log(d1 + d2, (d1 + d2) * weight);
-      return (d1 + d2) * weight;
-    },
-
-    _aStar: function (goalTile, targetDirection) {
+    _aStar: function (goalTile) {
       var config = this.get('map').get('config');
       var startTile = config[this.get('row')][this.get('col')];
       startTile.parent = null;
 
-      if (!goalTile) {
-        goalTile = {
-          row: this.get('goalRow'),
-          col: this.get('goalCol'),
-        };
-      }
       this.set('openTiles', [startTile]);
       this.set('closedTiles', []);
 
@@ -93,12 +73,11 @@
 
           if (!this._in(this.get('openTiles'), neighbor)) {
             lowestGScore = true;
-            neighbor.h = this._newHeuristic(
+            neighbor.h = this._heuristic(
               neighbor.row,
               neighbor.col,
               goalTile.row,
-              goalTile.col,
-              targetDirection
+              goalTile.col
             );
             this.get('openTiles').push(neighbor);
           } else if (gScore < neighbor.g) {
@@ -141,10 +120,10 @@
     },
 
     detectPlayer: function (playerLocation) {
-      var x = Math.abs(playerLocation.row - this.get('row'));
-      var y = Math.abs(playerLocation.col - this.get('col'));
-      if (x <= exports.globals.AI_THRESHOLD &&
-          y <= exports.globals.AI_THRESHOLD) {
+      var x = Math.abs(playerLocation.row - this.get('centerRow'));
+      var y = Math.abs(playerLocation.col - this.get('centerCol'));
+      if (x <= exports.globals.AI_THRESHOLD * 1.5 &&
+          y <= exports.globals.AI_THRESHOLD * 1.5) {
         this.set('active', true);
         this._aStar(playerLocation);
       } else {
@@ -158,30 +137,56 @@
     },
 
     _calculateLoiterPath: function () {
-      var config = this.get('map').get('config');
-      var offset = exports.globals.AI_THRESHOLD / 2;
-      var startX = this.get('col') - offset;
-      var endX =   this.get('col') + offset;
-      var startY = this.get('row') - offset;
-      var endY =   this.get('row') + offset;
-      var steps = _.range(exports.globals.LOITER_PATH_OFFSET);
-      return _.map(steps, function (step) {
-        var valid = false;
-        var nextStep = null;
+      var offset = exports.globals.AI_THRESHOLD;
+      var startX = this.get('centerCol') - offset;
+      var endX =   this.get('centerCol') + offset;
+      var startY = this.get('centerRow') - offset;
+      var endY =   this.get('centerRow') + offset;
+      var steps = [];
+      var nextStep = null;
+      for (var x = 0; x < exports.globals.LOITER_PATH_OFFSET; x++) {
+        var currentRow = nextStep ? nextStep.row : this.get('row');
+        var currentCol = nextStep ? nextStep.col : this.get('col');
+        nextStep = null;
         while (nextStep === null) {
           var random = Math.round(Math.random() * 4);
-          if (random === 0) { // up
-            nextStep = config[this.get('row') + 1][this.get('col')];
+          if (random === 0) {
+            var newRow = currentRow - 1;
+            if (newRow >= 0 &&
+                newRow >= startY &&
+                newRow <= endY &&
+                !this.get('map').hasObstacle(newRow, currentCol)) {
+              nextStep = this.get('map').get('config')[newRow][currentCol];
+            }
           } else if (random === 1) {
-            nextStep = config[this.get('row')][this.get('col') + 1];
+            var newRow = currentRow + 1;
+            if (newRow < exports.globals.MAP_HEIGHT &&
+                newRow >= startY &&
+                newRow <= endY &&
+                !this.get('map').hasObstacle(newRow, currentCol)) {
+              nextStep = this.get('map').get('config')[newRow][currentCol];
+            }
           } else if (random === 2) {
-            nextStep = config[this.get('row') - 1][this.get('col')];
+            var newCol = currentCol - 1;
+            if (newCol >= 0 &&
+                newCol >= startX &&
+                newCol <= endX &&
+                !this.get('map').hasObstacle(currentRow, newCol)) {
+              nextStep = this.get('map').get('config')[currentRow][newCol];
+            }
           } else if (random === 3) {
-            nextStep = config[this.get('row')][this.get('col') - 1];
+            var newCol = currentCol + 1;
+            if (newCol < exports.globals.MAP_WIDTH &&
+                newCol >= startX &&
+                newCol <= endX &&
+                !this.get('map').hasObstacle(currentRow, newCol)) {
+              nextStep = this.get('map').get('config')[currentRow][newCol];
+            }
           }
         }
-        return nextStep;
-      }, this);
+        steps.push(nextStep);
+      }
+      return steps;
     },
 
   });
