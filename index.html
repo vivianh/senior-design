@@ -9,6 +9,10 @@
     <script src="lib/js/backbone.js"></script>
 
     <div id="canvas">
+      <div id="fill">
+        GAME OVER.
+      </div>
+      <div id="restart"></div>
       <div id="map"></div>
       <div id="state"></div>
     </div>
@@ -47,6 +51,7 @@
     <script type="text/template" id="state-template">
       <div class="state">
         TIME: <%= timeElapsed %>, SCORE: <%= score %>
+        <button id="restart">PLAY AGAIN?</button>
       </div>
     </script>
 

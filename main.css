@@ -8,6 +8,56 @@ body {
     margin: 0 auto;
 }
 
+#fill {
+    position: absolute;
+    width: 750px;
+    height: 500px;
+    text-align: center;
+    font-family: monospace;
+    font-size: 24px;
+    z-index: 1;
+    visibility: hidden;
+}
+
+#fill.visible {
+    visibility: visible;
+    opacity: .7;
+    background-color: black;
+    color: white;
+    -webkit-transition: background 0.5s ease-in;
+}
+
+button {
+    height: 45px;
+    width: 150px;
+    margin: 10px 7px;
+    padding: 5px 5px;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 2px;
+    outline: 0;
+    overflow:hidden;
+    background: none;
+    position: relative;
+    color: #383736;
+    border: 2px #383736 solid;
+    border-radius: 4px;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+button:hover {
+  color: white;
+}
+
+button#restart {
+    visibility: hidden;
+}
+
+button#restart.visible {
+    visibility: visible;
+}
+
 #map .row {
     margin-bottom: -4px;
 }
@@ -63,5 +113,4 @@ body {
     background: gold;
     font-family: monospace;
     font-size: 24px;
-    padding: 20px;
 }

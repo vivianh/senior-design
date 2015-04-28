@@ -22,9 +22,35 @@
       this.set('score', this.get('score') + exports.globals.SCORE_INCREMENT_KEY);
     },
 
+    startGame: function () {
+      // Models
+      exports.player = new exports.Player();
+      exports.map = new exports.Map();
+
+      // Views
+      exports.playerView = new exports.PlayerView({
+        model: exports.player,
+        el: '#canvas',
+      });
+      exports.playerView.render();
+
+      exports.mapView = new exports.MapView({
+        model: exports.map,
+        el: '#map',
+      });
+      exports.mapView.render();
+    },
+
     endGame: function () {
-      console.log('game over');
       clearInterval(this.get('intervalId'));
+      $('#fill').toggleClass('visible');
+      $('button#restart').toggleClass('visible');
+      var that = this;
+      $('button#restart').click(function () {
+        that.startGame();
+        $('#fill').toggleClass('visible');
+        $('button#restart').toggleClass('visible');
+      });
     },
 
   });
