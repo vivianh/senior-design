@@ -125,16 +125,16 @@
         for (var c = 0; c < this.get('nextConfig')[0].length; c++) {
           var className = this.get('nextConfig')[r][c].name;
           if (className === 'isEmpty' || className === 'isRoom') {
-            var random = Math.round(Math.random() * 10);
+            var random = Math.round(Math.random() * 20);
             if (random < 1) {
               className = 'isKey';
             } else if (random < 2) {
               // create 'enemy'
               var enemy = new exports.AIPlayer({
                 row: r,
-                col: c,
+                col: c + configWidth,
                 centerRow: r,
-                centerCol: c,
+                centerCol: c + configWidth,
                 map: this,
                 active: false,
               });
@@ -142,11 +142,10 @@
               var enemyView = new exports.AIPlayerView({
                 model: enemy,
                 el: '#canvas',
-                className: 'enemy' + r + c,
+                className: 'enemy' + r + (c + configWidth),
               });
 
               exports.enemies.push(enemy);
-              console.log('creating enemy');
             }
           }
           updatedConfig[r][configWidth + c] = {
@@ -312,7 +311,7 @@
 
     mockSetupFile: function () {
       var file = 'ooxoooxxxoooooo ' +
-                 'xoEoxxxxKoooLoo ' +
+                 'xoEoxxxxKoooxoo ' +
                  'oooooxxooEoxxoo ' +
                  'oxxoooxoooxxKoo ' +
                  'oooooxxooooxxxo ' +

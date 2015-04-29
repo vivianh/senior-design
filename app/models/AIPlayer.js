@@ -120,15 +120,19 @@
     },
 
     detectPlayer: function (playerLocation) {
-      var x = Math.abs(playerLocation.row - this.get('centerRow'));
-      var y = Math.abs(playerLocation.col - this.get('centerCol'));
-      if (x <= exports.globals.AI_THRESHOLD * 1.5 &&
-          y <= exports.globals.AI_THRESHOLD * 1.5) {
-        this.set('active', true);
-        this._aStar(playerLocation);
-      } else {
-        this.set('active', false);
-        this.loiter();
+      var margin = this.get('map') ? this.get('map').get('margin') : 0;
+      if (this.get('col') > margin &&
+          this.get('col') < margin + exports.globals.MAP_WIDTH - 1) {
+        var x = Math.abs(playerLocation.row - this.get('centerRow'));
+        var y = Math.abs(playerLocation.col - this.get('centerCol'));
+        if (x <= exports.globals.AI_THRESHOLD * 1.5 &&
+            y <= exports.globals.AI_THRESHOLD * 1.5) {
+          this.set('active', true);
+          this._aStar(playerLocation);
+        } else {
+          this.set('active', false);
+          this.loiter();
+        }
       }
     },
 
@@ -142,6 +146,12 @@
       var endX =   this.get('centerCol') + offset;
       var startY = this.get('centerRow') - offset;
       var endY =   this.get('centerRow') + offset;
+      if (startX < 0) {
+        startX = 0;
+      }
+      if (startY < 0) {
+        startY = 0;
+      }
       var steps = [];
       var nextStep = null;
       for (var x = 0; x < exports.globals.LOITER_PATH_OFFSET; x++) {
@@ -152,8 +162,7 @@
           var random = Math.round(Math.random() * 4);
           if (random === 0) {
             var newRow = currentRow - 1;
-            if (newRow >= 0 &&
-                newRow >= startY &&
+            if (newRow >= startY &&
                 newRow <= endY &&
                 !this.get('map').hasObstacle(newRow, currentCol)) {
               nextStep = this.get('map').get('config')[newRow][currentCol];
@@ -168,8 +177,7 @@
             }
           } else if (random === 2) {
             var newCol = currentCol - 1;
-            if (newCol >= 0 &&
-                newCol >= startX &&
+            if (newCol >= startX &&
                 newCol <= endX &&
                 !this.get('map').hasObstacle(currentRow, newCol)) {
               nextStep = this.get('map').get('config')[currentRow][newCol];

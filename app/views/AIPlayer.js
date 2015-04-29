@@ -8,26 +8,27 @@
       this.options.firstRender = true;
       this.template = _.template($('#enemy-template').html());
       this.listenTo(this.model, 'change', this.render);
-      this.options.intervalId = setInterval(_.bind(this._move, this), 300);
+      this.options.intervalId = setInterval(_.bind(this._move, this), 500);
     },
 
     render: function (params) {
-      if (this.options.firstRender) {
-        this.options.firstRender = false;
-        this.model.loiter();
-      }
       var className = '.' + (this.options.className);
       $(className).remove();
       var margin = exports.map ? exports.map.get('margin') : 0;
-      if (this.model.get('col') > margin) {
+      if (this.model.get('col') >= margin &&
+          this.model.get('col') < margin + exports.globals.MAP_WIDTH) {
+        if (this.options.firstRender) {
+          this.options.firstRender = false;
+          this.model.loiter();
+        }
         var compiledTemplate = this.template(
           _.extend(this.model.toJSON(), {
             'col': this.model.get('col') - margin,
             'className': this.options.className,
           })
         );
-      }
       this.$el.append(compiledTemplate);
+      }
     },
 
     _move: function () {
