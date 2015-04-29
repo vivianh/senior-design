@@ -43,49 +43,61 @@
       }
 
       if (keyCode === 104) { // H, left
+        var options = {
+          'direction': exports.globals.MAP_DIRECTION_LEFT,
+        };
         newCol = currentCol - 1;
         if (!exports.map.hasObstacle(currentRow, newCol)) {
           this._checkLockAndKey(currentRow, newCol);
           var margin =
             this.model.get('margin') <= 0 ? 0 : this.model.get('margin') - 1;
-          this.model.set({
+          _.extend(options, {
             'col': newCol,
             'margin': margin,
-            'direction': exports.globals.MAP_DIRECTION_LEFT,
           });
           exports.map.setMargin(false);
         }
+        this.model.set(options);
       } else if (keyCode === 106) { // J, down
+        var options = {
+          'direction': exports.globals.MAP_DIRECTION_DOWN,
+        };
         newRow = currentRow + 1;
         if (newRow < exports.globals.MAP_HEIGHT &&
             !exports.map.hasObstacle(newRow, currentCol)) {
           this._checkLockAndKey(newRow, currentCol);
-          this.model.set({
+          _.extend(options, {
             'row': newRow,
-            'direction': exports.globals.MAP_DIRECTION_DOWN,
           });
         }
+        this.model.set(options);
       } else if (keyCode === 107) { // K, up
+        var options = {
+          'direction': exports.globals.MAP_DIRECTION_UP,
+        };
         newRow = currentRow - 1;
         if (newRow >= 0 &&
             !exports.map.hasObstacle(newRow, currentCol)) {
           this._checkLockAndKey(newRow, currentCol);
-          this.model.set({
+          _.extend(options, {
             'row': newRow,
-            'direction': exports.globals.MAP_DIRECTION_UP,
           });
         }
+        this.model.set(options);
       } else if (keyCode === 108) { // L, right
+        var options = {
+          'direction': exports.globals.MAP_DIRECTION_RIGHT,
+        };
         newCol = currentCol + 1;
         if (!exports.map.hasObstacle(currentRow, newCol)) {
           this._checkLockAndKey(currentRow, newCol);
-          this.model.set({
+          _.extend(options, {
             'col': newCol,
             'margin': this.model.get('margin') + 1,
-            'direction': exports.globals.MAP_DIRECTION_RIGHT,
           });
           exports.map.setMargin(true);
         }
+        this.model.set(options);
       }
 
       for (var i = 0; i < exports.enemies.length; i++) {
